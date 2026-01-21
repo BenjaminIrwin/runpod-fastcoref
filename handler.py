@@ -22,6 +22,22 @@ Response format:
     }
 """
 
+import os
+
+# Force eager attention implementation before importing transformers
+# This is needed because Longformer doesn't support SDPA
+os.environ['TRANSFORMERS_ATTENTION_IMPLEMENTATION'] = 'eager'
+
+# Monkey-patch transformers to use eager attention by default
+import transformers.modeling_utils as mu
+original_autoset = getattr(mu.PreTrainedModel, '_autoset_attn_implementation', None)
+if original_autoset:
+    @classmethod
+    def patched_autoset(cls, config, *args, **kwargs):
+        config._attn_implementation = 'eager'
+        return config
+    mu.PreTrainedModel._autoset_attn_implementation = patched_autoset
+
 import runpod
 import json
 from typing import List, Dict, Any, Optional
