@@ -1,4 +1,6 @@
 runpod
 fastcoref
 torch>=2.0.0
-transformers>=4.30.0
+# Pin transformers to 4.44.x to avoid Longformer SDPA compatibility issue
+# (newer versions require attn_implementation="eager" which fastcoref doesn't expose)
+transformers==4.44.2
