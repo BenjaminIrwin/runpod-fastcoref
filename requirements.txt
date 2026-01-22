@@ -1,6 +1,6 @@
 runpod
 fastcoref
-torch>=2.0.0
+# torch already included in base image (pytorch/pytorch:2.7.1)
 # Pin transformers to 4.38.x to avoid Longformer SDPA auto-check issue
 # (4.39+ auto-enables SDPA which Longformer doesn't support)
 transformers==4.38.2

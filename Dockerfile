@@ -1,7 +1,7 @@
 # RunPod Serverless Container for FastCoref LingMessCoref
-# Based on RunPod's PyTorch base image with CUDA support
+# Using official PyTorch runtime image (3.2GB vs 7GB+ for RunPod images)
 
-FROM runpod/pytorch:2.4.0-py3.11-cuda12.4.1-runtime-ubuntu22.04
+FROM pytorch/pytorch:2.7.1-cuda12.6-cudnn9-runtime
 
 WORKDIR /app
 
