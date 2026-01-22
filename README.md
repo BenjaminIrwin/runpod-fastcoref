@@ -125,7 +125,7 @@ To eliminate cold starts entirely, configure at least 1 "Active Worker" in RunPo
 | Variable | Description |
 |----------|-------------|
 | `RUNPOD_API_KEY` | Your RunPod API key |
-| `RUNPOD_FASTCOREF_ENDPOINT_ID` | Endpoint ID (for client example) |
+| `RUNPOD_FASTCOREF_ENDPOINT_ID` | Endpoint ID (default: `vd145wze17hpc0`) |
 
 ## Development
 
