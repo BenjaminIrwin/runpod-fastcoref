@@ -44,30 +44,37 @@ from typing import List, Dict, Any, Optional
 
 print("Handler module loading...")
 
-# Global model instance (loaded lazily on first request)
-_model = None
+# =============================================================================
+# MODEL LOADING - CRITICAL FOR FLASHBOOT
+# =============================================================================
+# FlashBoot requires models to be loaded BEFORE calling serverless.start()
+# This ensures the model state is captured in the FlashBoot snapshot.
+# Loading lazily (on first request) defeats FlashBoot's purpose.
+# =============================================================================
+
+print("Loading LingMessCoref model at startup (required for FlashBoot)...")
+try:
+    from fastcoref import LingMessCoref
+    _model = LingMessCoref(device='cuda:0')
+    print("LingMessCoref model loaded successfully on CUDA")
+except Exception as e:
+    print(f"Error loading model at startup: {e}")
+    import traceback
+    traceback.print_exc()
+    _model = None
 
 
 def get_model():
     """
-    Get or load the LingMessCoref model.
+    Get the pre-loaded LingMessCoref model.
     
-    The model is loaded lazily on first request and cached globally.
-    Uses CUDA for GPU acceleration.
+    The model is loaded at module startup (before serverless.start())
+    to enable FlashBoot optimization.
     """
     global _model
     
     if _model is None:
-        print("Loading LingMessCoref model...")
-        try:
-            from fastcoref import LingMessCoref
-            _model = LingMessCoref(device='cuda:0')
-            print("LingMessCoref model loaded successfully on CUDA")
-        except Exception as e:
-            print(f"Error loading model: {e}")
-            import traceback
-            traceback.print_exc()
-            raise
+        raise RuntimeError("Model failed to load at startup. Check logs for errors.")
     
     return _model
 
